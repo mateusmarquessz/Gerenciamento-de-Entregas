@@ -18,7 +18,6 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/auth")
-@CrossOrigin(origins = "https://sistema-web-khaki.vercel.app/")
 public class AuthController {
 
     @Autowired
