@@ -2,10 +2,12 @@ package com.frete.mais.gerenciamento_de_entregas.service;
 
 import com.frete.mais.gerenciamento_de_entregas.dto.UserDTO;
 import com.frete.mais.gerenciamento_de_entregas.entities.Usuario;
+import com.frete.mais.gerenciamento_de_entregas.enuns.UserRoles;
 import com.frete.mais.gerenciamento_de_entregas.repository.UsuarioRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -51,20 +53,28 @@ public class UsuarioService {
 
     //Atualiza dados do Usuario
     public Usuario AtualizaUsuario(Long id, Usuario updatedUser) {
-        return usuarioRepository.findById(id)
-                .map(usuario -> {
-                    usuario.setNome(updatedUser.getNome());
-                    usuario.setEmail(updatedUser.getEmail());
-
-                    // Só criptografa a senha se ela tiver sido alterada e não for nula ou vazia
-                    if (updatedUser.getSenha() != null && !updatedUser.getSenha().isEmpty()) {
-                        usuario.setSenha(passwordEncoder.encode(updatedUser.getSenha()));
-                    }
-
-                    return usuarioRepository.save(usuario);
-                })
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        Usuario usuarioAutenticado = usuarioRepository.findByEmail(username)
                 .orElseThrow(() -> new RuntimeException("Usuário não encontrado!"));
+
+        if (usuarioAutenticado.getRole() == UserRoles.ADMIN || usuarioAutenticado.getId().equals(id)) {
+            return usuarioRepository.findById(id)
+                    .map(usuario -> {
+                        usuario.setNome(updatedUser.getNome());
+                        usuario.setEmail(updatedUser.getEmail());
+
+                        if (updatedUser.getSenha() != null && !updatedUser.getSenha().isEmpty()) {
+                            usuario.setSenha(passwordEncoder.encode(updatedUser.getSenha()));
+                        }
+
+                        return usuarioRepository.save(usuario);
+                    })
+                    .orElseThrow(() -> new RuntimeException("Usuário não encontrado!"));
+        } else {
+            throw new RuntimeException("Você não tem permissão para atualizar dados de outros usuários!");
+        }
     }
+
 
     //Deleta Usuarios
     @Secured("ROLE_ADMIN")

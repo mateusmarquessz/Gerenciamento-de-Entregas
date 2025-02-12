@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -34,6 +35,8 @@ public class EntregasService {
 
         Entrega entrega = new Entrega();
         entrega.setDescricao(entregasDTO.getDescricao());
+        entrega.setDataCriacao(LocalDate.now());
+        entrega.setDataEntrega(LocalDate.now().plusDays(4));
         entrega.setStatus(StatusEntrega.PENDENTE);
         entrega.setUsuario(usuario);
 
@@ -50,6 +53,7 @@ public class EntregasService {
                 .orElseThrow(() -> new RuntimeException("Entrega não encontrada"));
 
         entrega.setDescricao(entregasDTO.getDescricao());
+        entrega.setDataEntrega(LocalDate.now());
         entrega.setStatus(entregasDTO.getStatus());
         entrega = entregaRepository.save(entrega);
         return new EntregasDTO(entrega);

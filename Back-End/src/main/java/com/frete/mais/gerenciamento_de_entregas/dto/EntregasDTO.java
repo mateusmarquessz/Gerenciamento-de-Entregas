@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
+
 @Getter
 @Setter
 @NoArgsConstructor  // Construtor vazio necessário para a desserialização
@@ -15,6 +17,7 @@ public class EntregasDTO {
 
     private Long id;
     private String descricao;
+    private LocalDate dataEntrega;
     private StatusEntrega status;
     private Long usuarioID;
     private String usuarioNome;
@@ -23,6 +26,7 @@ public class EntregasDTO {
     public EntregasDTO(Entrega entrega) {
         this.id = entrega.getId();
         this.descricao = entrega.getDescricao();
+        this.dataEntrega = entrega.getDataEntrega();
         this.status = entrega.getStatus();
         this.usuarioID = entrega.getUsuario().getId();
         this.usuarioNome = entrega.getUsuario().getNome();

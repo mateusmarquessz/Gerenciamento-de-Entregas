@@ -14,6 +14,7 @@ public class Entrega {
 
     private String descricao;
     private LocalDate dataEntrega;
+    private LocalDate dataCriacao;
 
     @Enumerated(EnumType.STRING)
     private StatusEntrega status;
@@ -64,5 +65,13 @@ public class Entrega {
 
     public void setUsuario(Usuario usuario) {
         this.usuario = usuario;
+    }
+
+    public LocalDate getDataCriacao() {
+        return dataCriacao;
+    }
+
+    public void setDataCriacao(LocalDate dataCriacao) {
+        this.dataCriacao = dataCriacao;
     }
 }

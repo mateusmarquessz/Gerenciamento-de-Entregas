@@ -2,19 +2,14 @@ package com.frete.mais.gerenciamento_de_entregas.controller;
 
 import com.frete.mais.gerenciamento_de_entregas.dto.EntregasDTO;
 import com.frete.mais.gerenciamento_de_entregas.entities.Entrega;
-import com.frete.mais.gerenciamento_de_entregas.entities.Usuario;
-import com.frete.mais.gerenciamento_de_entregas.enuns.StatusEntrega;
 import com.frete.mais.gerenciamento_de_entregas.repository.EntregaRepository;
 import com.frete.mais.gerenciamento_de_entregas.repository.UsuarioRepository;
 import com.frete.mais.gerenciamento_de_entregas.service.EntregasService;
-import com.frete.mais.gerenciamento_de_entregas.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,17 +17,10 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/entregas")
-@CrossOrigin(origins = "*")
 public class EntregaController {
 
     @Autowired
     private EntregasService entregaService;
-
-    @Autowired
-    private UsuarioRepository usuarioRepository;
-
-    @Autowired
-    private EntregaRepository entregaRepository;
 
     // Criar nova entrega (Create do CRUD)
     @PostMapping
