@@ -44,7 +44,7 @@ Antes de rodar o programa, você precisa garantir que o seguinte esteja instalad
    - Atualize as seguintes propriedades com os dados do seu banco de dados:
 
      ```properties
-     spring.datasource.url=jdbc:postgresql://localhost:5432/seu_banco
+     spring.datasource.url=url_do_seu_banco
      spring.datasource.username=seu_usuario
      spring.datasource.password=sua_senha
      ```
