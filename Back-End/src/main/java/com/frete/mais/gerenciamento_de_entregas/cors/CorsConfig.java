@@ -1,4 +1,4 @@
-package com.frete.mais.gerenciamento_de_entregas.Cors;
+package com.frete.mais.gerenciamento_de_entregas.cors;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;

@@ -1,6 +1,6 @@
 package com.frete.mais.gerenciamento_de_entregas.entities;
 
-import com.frete.mais.gerenciamento_de_entregas.DTO.UserDTO;
+import com.frete.mais.gerenciamento_de_entregas.dto.UserDTO;
 import com.frete.mais.gerenciamento_de_entregas.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;

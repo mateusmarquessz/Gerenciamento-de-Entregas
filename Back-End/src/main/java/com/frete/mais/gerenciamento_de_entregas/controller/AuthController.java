@@ -1,8 +1,8 @@
 package com.frete.mais.gerenciamento_de_entregas.controller;
 
-import com.frete.mais.gerenciamento_de_entregas.DTO.LoginRequestDTO;
-import com.frete.mais.gerenciamento_de_entregas.DTO.RegisterRequestDTO;
-import com.frete.mais.gerenciamento_de_entregas.DTO.ResponseDTO;
+import com.frete.mais.gerenciamento_de_entregas.dto.LoginRequestDTO;
+import com.frete.mais.gerenciamento_de_entregas.dto.RegisterRequestDTO;
+import com.frete.mais.gerenciamento_de_entregas.dto.ResponseDTO;
 import com.frete.mais.gerenciamento_de_entregas.config.TokenService;
 import com.frete.mais.gerenciamento_de_entregas.entities.Usuario;
 import com.frete.mais.gerenciamento_de_entregas.enuns.UserRoles;
@@ -44,7 +44,7 @@ public class AuthController {
                     .body("Erro ao realizar o login: " + e.getMessage());
         }
     }
-
+    //Create do Crud Usuario
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody RegisterRequestDTO body) {
         try {
@@ -67,6 +67,8 @@ public class AuthController {
         }
     }
 
+
+    //Create do Crud Usuario com Role_Admin
     @PostMapping("/register-admin")
     @Secured("Role_ADMIN")
     public ResponseEntity<?> registerAdmin(@RequestBody RegisterRequestDTO body) {

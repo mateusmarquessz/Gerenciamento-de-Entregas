@@ -10,7 +10,7 @@ public class Entrega {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     private String descricao;
     private LocalDate dataEntrega;
@@ -18,20 +18,21 @@ public class Entrega {
     @Enumerated(EnumType.STRING)
     private StatusEntrega status;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "usuario_id")
     private Usuario usuario;
 
     // Getters e Setters
 
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
+
 
     public String getDescricao() {
         return descricao;

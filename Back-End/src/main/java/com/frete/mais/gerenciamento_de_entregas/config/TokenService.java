@@ -4,7 +4,6 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
-import com.auth0.jwt.interfaces.DecodedJWT;
 import com.frete.mais.gerenciamento_de_entregas.entities.Usuario;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -35,21 +34,17 @@ public class TokenService {
         }
     }
 
-    public String validateToken(String token) {
-        if (token == null || token.isEmpty()) {
+    public String validateToken(String token){
+        if(token == null || token.isEmpty()){
             return null;
         }
         try {
             Algorithm algorithm = Algorithm.HMAC256(secret);
-            DecodedJWT decodedJWT = JWT.require(algorithm)
+            return JWT.require(algorithm)
                     .withIssuer("login-auth-api")
                     .build()
-                    .verify(token);
-
-            String role = decodedJWT.getClaim("role").asString();
-            String subject = decodedJWT.getSubject();
-
-            return subject;
+                    .verify(token)
+                    .getSubject();
         } catch (JWTVerificationException exception) {
             return null;
         }

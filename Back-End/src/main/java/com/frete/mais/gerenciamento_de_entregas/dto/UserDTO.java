@@ -1,4 +1,4 @@
-package com.frete.mais.gerenciamento_de_entregas.DTO;
+package com.frete.mais.gerenciamento_de_entregas.dto;
 
 import com.frete.mais.gerenciamento_de_entregas.enuns.UserRoles;
 
