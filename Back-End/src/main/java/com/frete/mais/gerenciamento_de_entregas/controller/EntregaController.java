@@ -34,69 +34,30 @@ public class EntregaController {
     @Autowired
     private EntregaRepository entregaRepository;
 
-    // Criar nova entrega
-    @PreAuthorize("hasRole('ADMIN')")
+    // Criar nova entrega (Create do CRUD)
     @PostMapping
-    public ResponseEntity<EntregasDTO> criarEntrega(@RequestBody EntregasDTO entregasDTO) {
-        try {
-            // Verifica se o usuário existe
-            Usuario usuario = usuarioRepository.findById(entregasDTO.getUsuarioID())
-                    .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
-
-            // Cria a entrega com o status adequado
-            Entrega entrega = new Entrega();
-            entrega.setDescricao(entregasDTO.getDescricao());
-            entrega.setStatus(entregasDTO.getStatus()); // Status vindo do DTO
-            entrega.setUsuario(usuario);
-
-            // Salva a entrega no banco de dados
-            entrega = entregaRepository.save(entrega);
-
-            // Retorna o DTO da entrega criada
-            return ResponseEntity.status(HttpStatus.CREATED).body(new EntregasDTO(entrega));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
-    }
-
-
-
-
-
-
-    // Método para alterar o status de uma entrega
-    @PutMapping("/{id}/status")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Entrega> alterarStatusEntrega(@PathVariable Long id,
-                                                        @RequestParam String status,
-                                                        @RequestParam Long usuarioId) {
-        try {
-            // Chama o serviço para alterar o status
-            Entrega updatedEntrega = entregaService.alterarStatus(id, status, usuarioId);
-            return ResponseEntity.ok(updatedEntrega);
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
-        }
+    public ResponseEntity<EntregasDTO> criarEntrega(@RequestBody EntregasDTO entregasDTO) {
+        EntregasDTO novaEntrega = entregaService.criarEntrega(entregasDTO);
+        return ResponseEntity.ok(novaEntrega);
+    }
+
+    // Método para alterar o status de uma entrega (Admin) (Update do Crud)
+    @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')") // Apenas ADMIN pode atualizar entregas
+    public ResponseEntity<EntregasDTO> atualizarEntrega(@PathVariable Long id, @RequestBody EntregasDTO entregasDTO) {
+        EntregasDTO entregaAtualizada = entregaService.atualizarEntrega(id, entregasDTO);
+        return ResponseEntity.ok(entregaAtualizada);
+    }
+
+    // Método para alterar o status de uma entrega (user) (Update do Crud)
+    @PutMapping("/{entregaId}/atualizar-status")
+    public Entrega atualizarStatus(@PathVariable Long entregaId, @RequestBody EntregasDTO entregasDTO) {
+        return entregaService.atualizarStatus(entregaId, entregasDTO.getUsuarioID());
     }
 
 
-
-    // Atualizar status da entrega(Usuario)
-    @PutMapping("/{id}/confirmacaoStatus")
-    public ResponseEntity<EntregasDTO> atualizarStatus(@PathVariable Long id, @RequestBody StatusEntrega novoStatus) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Long usuarioId = Long.valueOf(authentication.getName());
-
-        try {
-            Entrega entregaAtualizada = entregaService.atualizarStatus(id, novoStatus, usuarioId);
-            return ResponseEntity.ok(new EntregasDTO(entregaAtualizada));
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
-        }
-    }
-
+    //Delete do Crud
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> deleteEntrega(@PathVariable Long id) {
@@ -113,6 +74,7 @@ public class EntregaController {
     }
 
 
+    //Read do Crud
     @GetMapping("/usuario/{usuarioId}")
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<List<EntregasDTO>> listarEntregasUsuario(@PathVariable Long usuarioId) {
@@ -128,7 +90,7 @@ public class EntregaController {
     }
 
 
-    // Listar todas as entregas (somente para administradores)
+    // Listar todas as entregas (somente para administradores) read do crud
     @GetMapping
     @Secured("ROLE_ADMIN")
     public ResponseEntity<List<EntregasDTO>> listarTodasEntregas() {
