@@ -5,6 +5,7 @@ import com.frete.mais.gerenciamento_de_entregas.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,44 +17,51 @@ public class UsuarioController {
     @Autowired
     private UsuarioService usuarioService;
 
-    //Read do CRUD
     @GetMapping("/profile/{id}")
-    public ResponseEntity<Usuario> getUsuarioById(@PathVariable Long id) {
-        Usuario user = usuarioService.getUserById(id);
-        return ResponseEntity.ok(user);
+    public ResponseEntity<?> getUsuarioById(@PathVariable Long id) {
+        try {
+            Usuario user = usuarioService.getUserById(id);
+            return ResponseEntity.ok(user);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Erro ao buscar usuário: " + e.getMessage());
+        }
     }
 
-
-    //Update do CRUD
     @PutMapping("/{id}")
-    public ResponseEntity<Usuario> updateUsuario(@PathVariable Long id, @RequestBody Usuario updatedUser) {
-        try{
+    public ResponseEntity<?> updateUsuario(@PathVariable Long id, @RequestBody Usuario updatedUser) {
+        try {
             Usuario updated = usuarioService.AtualizaUsuario(id, updatedUser);
-
             return ResponseEntity.ok(updated);
         } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuário não encontrado: " + e.getMessage());
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao atualizar usuário: " + e.getMessage());
         }
     }
 
-    //Delete do CRUD
     @DeleteMapping("/{id}")
-    public ResponseEntity<Usuario> deleteUsuario(@PathVariable Long id) {
-        boolean isDeleted = usuarioService.deleteUserById(id);
-        if (isDeleted) {
-            return ResponseEntity.ok().build();
-        } else{
-            return ResponseEntity.notFound().build();
+    @Secured("ROLE_ADMIN")
+    public ResponseEntity<?> deleteUsuario(@PathVariable Long id) {
+        try {
+            boolean isDeleted = usuarioService.deleteUserById(id);
+            if (isDeleted) {
+                return ResponseEntity.ok("Usuário deletado com sucesso.");
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuário não encontrado.");
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao deletar usuário: " + e.getMessage());
         }
     }
 
-    //Lista todos os usuarios
     @GetMapping
-    public ResponseEntity<List<Usuario>> listarUsuarios() {
-        List<Usuario> usuarios = usuarioService.listarTodosUsuarios();
-        return ResponseEntity.ok(usuarios);
+    @Secured("ROLE_ADMIN")
+    public ResponseEntity<?> listarUsuarios() {
+        try {
+            List<Usuario> usuarios = usuarioService.listarTodosUsuarios();
+            return ResponseEntity.ok(usuarios);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao listar usuários: " + e.getMessage());
+        }
     }
-
 }

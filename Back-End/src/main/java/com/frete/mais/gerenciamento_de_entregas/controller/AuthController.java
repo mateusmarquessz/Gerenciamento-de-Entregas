@@ -69,7 +69,7 @@ public class AuthController {
 
     //Create do Crud Usuario com Role_Admin
     @PostMapping("/register-admin")
-    @Secured("Role_ADMIN")
+    @Secured("ROLE_ADMIN")
     public ResponseEntity<?> registerAdmin(@RequestBody RegisterRequestDTO body) {
         try {
             Optional<Usuario> user = this.repository.findByEmail(body.email());

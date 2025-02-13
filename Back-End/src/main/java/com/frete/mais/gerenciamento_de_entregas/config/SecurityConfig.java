@@ -27,15 +27,38 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
+                        // Endpoints públicos
                         .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
                         .requestMatchers(HttpMethod.POST, "/auth/register").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/auth/register-admin").authenticated()
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
+
+                        // Somente ADMIN pode criar novos admins
+                        .requestMatchers(HttpMethod.POST, "/auth/register-admin").hasRole("ADMIN")
+
+                        // Permissões para entregas
+                        .requestMatchers(HttpMethod.GET, "/entregas").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/entregas").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/entregas/{id}").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/entregas/{id}").hasRole("ADMIN")
+
+                        // USER pode listar e atualizar suas próprias entregas
+                        .requestMatchers(HttpMethod.GET, "/entregas/usuario/{usuarioId}").hasRole("USER")
+                        .requestMatchers(HttpMethod.PUT, "/entregas/{entregaId}/atualizar-status").hasRole("USER")
+
+                        // Permissões do Usuario
+                        .requestMatchers(HttpMethod.GET, "/api/users/profile/{id}").permitAll()
+                        .requestMatchers(HttpMethod.PUT, "/api/users/{id}").permitAll()
+                        .requestMatchers(HttpMethod.DELETE, "/api/users/{id}").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/users").hasRole("ADMIN")
+
+                        // Qualquer outra requisição exige autenticação
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class);
+
         return http.build();
     }
+
 
     @Bean
     public PasswordEncoder passwordEncoder() {
