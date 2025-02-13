@@ -25,7 +25,7 @@ Caso ainda não tenha o PostgreSQL instalado, siga as instruções do site ofici
 
 ## 2. Durante a Instalação
 
-Durante o processo de instalação, o PostgreSQL pedirá para definir uma senha para o banco de dados. **Certifique-se de anotá-la**, pois você precisará dela para conectar o seu projeto ao banco de dados.
+Durante o processo de instalação, o PostgreSQL criara um usuario, e pedira para criar uma senha
 
 ## 3. Acessar o PostgreSQL
 
