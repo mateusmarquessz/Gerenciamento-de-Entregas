@@ -89,7 +89,7 @@ spring.datasource.password=sua_senha
 
 ## Swagger
 
-Após iniciar o sistema, você pode acessar a interface do Swagger para visualizar e testar os endpoints da API.
+Após iniciar o sistema, você pode acessar a interface do Swagger para visualizar e testar os endpoints da API, assim que o projeto estiver rodando.
 
 - Acesse: [http://localhost:8080/swagger-ui/index.html#/v](http://localhost:8080/swagger-ui/index.html#/v)
 
