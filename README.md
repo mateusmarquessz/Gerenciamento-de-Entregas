@@ -13,41 +13,44 @@ Antes de rodar o programa, você precisa garantir que o seguinte esteja instalad
 
 ## Configuração do Banco de Dados PostgreSQL
 
-1. **Instalar o PostgreSQL**: Se ainda não tiver o PostgreSQL instalado, siga as instruções de instalação no [site oficial do PostgreSQL](https://www.postgresql.org/download/).
+# Configuração do PostgreSQL para o Projeto
 
-2. **Crie um banco de dados no PostgreSQL**:
-   - Abra o terminal ou o pgAdmin.
-   - Crie um banco de dados para o sistema:
+Este guia irá orientá-lo na instalação do PostgreSQL e configuração do banco de dados para seu projeto.
 
-     ```sql
-     CREATE DATABASE gerenciamento_de_entregas;
-     ```
+## 1. Instalar o PostgreSQL
 
-3. **Crie um usuário para o banco de dados**:
-   - Crie um usuário e defina uma senha:
+Caso ainda não tenha o PostgreSQL instalado, siga as instruções do site oficial para o seu sistema operacional:
 
-     ```sql
-     CREATE USER seu_usuario WITH PASSWORD 'sua_senha';
-     ```
+- [Download do PostgreSQL](https://www.postgresql.org/download/)
 
-4. **Dê permissões ao usuário**:
-   - Conceda permissões ao usuário para o banco de dados:
+## 2. Durante a Instalação
 
-     ```sql
-     GRANT ALL PRIVILEGES ON DATABASE gerenciamento_de_entregas TO seu_usuario;
-     ```
+Durante o processo de instalação, o PostgreSQL criara um usuario, e pedira para criar uma senha
 
-## Configuração do Projeto
+## 3. Acessar o PostgreSQL
 
-1. **Atualize as configurações do banco de dados**:
-   - No seu projeto, abra o arquivo `src/main/resources/application.properties`.
-   - Atualize as seguintes propriedades com os dados do seu banco de dados:
+Após a instalação, siga as etapas abaixo para configurar o banco de dados:
 
-     ```properties
-     spring.datasource.url=url_do_seu_banco
-     spring.datasource.username=seu_usuario
-     spring.datasource.password=sua_senha
-     ```
+1. Abra o **pgAdmin** (ferramenta gráfica para gerenciar o PostgreSQL).
+2. Ao abrir, ele solicitará a definicao de uma senha para o banco.
+3. Na barra lateral, clique em **Servers**, ele pedira a senha novamente e selecione a versão do PostgreSQL instalada, como por exemplo: `PostgreSQL 17`.
+4. Clique com o botão direito sobre o nome o `PostgreSQL 17` (por exemplo) e selecione **Create → Database** para criar um novo banco de dados.
+5. Defina o **nome do banco de dados** e clique em **Save**.
+
+## 4. Configuração do Projeto
+
+Agora, você precisa configurar seu projeto para se conectar ao banco de dados PostgreSQL. Para isso, siga os seguintes passos:
+
+1. Abra o arquivo `src/main/resources/application.properties` no seu projeto.
+2. Atualize as propriedades com as informações do seu banco de dados.
+
+### Exemplo de configurações:
+
+```properties
+spring.datasource.url=jdbc:postgresql://localhost:5432/nome_do_seu_banco
+spring.datasource.username=seu_usuario
+spring.datasource.password=sua_senha
+```
 ## Usuário Padrão ADMIN
 - Ao iniciar o sistema pela primeira vez, um usuário padrão com role ADMIN será criado automaticamente. 
 - Este usuário tem as seguintes credenciais:
@@ -86,7 +89,7 @@ Antes de rodar o programa, você precisa garantir que o seguinte esteja instalad
 
 ## Swagger
 
-Após iniciar o sistema, você pode acessar a interface do Swagger para visualizar e testar os endpoints da API.
+Após iniciar o sistema, você pode acessar a interface do Swagger para visualizar e testar os endpoints da API, assim que o projeto estiver rodando.
 
 - Acesse: [http://localhost:8080/swagger-ui/index.html#/v](http://localhost:8080/swagger-ui/index.html#/v)
 
