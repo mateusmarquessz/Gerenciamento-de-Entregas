@@ -19,7 +19,6 @@ public class Usuario {
     private String email;
 
     @NotBlank(message = "A senha é obrigatória")
-    @Length(min = 6, message = "A senha deve ter pelo menos 6 caracteres")
     private String senha;
 
     @Enumerated(EnumType.STRING)

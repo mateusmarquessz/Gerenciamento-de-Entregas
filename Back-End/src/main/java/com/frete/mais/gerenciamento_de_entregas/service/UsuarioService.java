@@ -87,6 +87,7 @@ public class UsuarioService {
     }
 
     //Lista todos os usuarios
+    @Secured("ROLE_ADMIN")
     public List<Usuario> listarTodosUsuarios() {
         return usuarioRepository.findAll();
     }
