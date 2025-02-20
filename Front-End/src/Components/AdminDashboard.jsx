@@ -4,7 +4,7 @@ import axios from "axios";
 function AdminDashboard() {
   const [entregas, setEntregas] = useState([]);
   const [usuarios, setUsuarios] = useState([]);
-  const [descricao, setDescricao] = useState("");
+  const [descricao, setDescricao] = useState(""); // Para criação de novas entregas
   const [usuarioID, setUsuarioID] = useState("");
   const [editingEntrega, setEditingEntrega] = useState(null);
   const [novoStatus, setNovoStatus] = useState("");
@@ -14,6 +14,7 @@ function AdminDashboard() {
     email: "",
     senha: "",
   });
+  const [descricaoEdicao, setDescricaoEdicao] = useState(""); // Para edição de entregas existentes
 
   useEffect(() => {
     fetchEntregas();
@@ -130,6 +131,12 @@ function AdminDashboard() {
   const logout = () => {
     localStorage.removeItem("token");
     window.location.href = "/login";
+  };
+
+  const editarEntregaModal = (entrega) => {
+    setDescricaoEdicao(entrega.descricao); // Define a descrição para edição
+    setNovoStatus(entrega.status); // Define o status atual
+    setEditingEntrega(entrega.id); // Inicia o modo de edição
   };
 
   return (
@@ -255,13 +262,13 @@ function AdminDashboard() {
                   <div className="flex flex-col sm:flex-row gap-2 w-full">
                     <input
                       type="text"
-                      defaultValue={entrega.descricao}
-                      onChange={(e) => setDescricao(e.target.value)}
+                      value={descricaoEdicao} // Aqui você usa descricaoEdicao
+                      onChange={(e) => setDescricaoEdicao(e.target.value)}
                       className="border p-2 flex-1 rounded-lg shadow-sm"
                       autoFocus
                     />
                     <select
-                      defaultValue={entrega.status}
+                      value={novoStatus}
                       onChange={(e) => setNovoStatus(e.target.value)}
                       className="border p-2 rounded-lg shadow-sm"
                     >
@@ -270,7 +277,7 @@ function AdminDashboard() {
                       <option value="ENTREGUE">Entregue</option>
                     </select>
                     <button
-                      onClick={() => editarEntrega(entrega.id, descricao, novoStatus)}
+                      onClick={() => editarEntrega(entrega.id, descricaoEdicao, novoStatus)}
                       className="bg-green-600 text-white px-4 py-2 rounded-lg shadow hover:bg-green-700 transition"
                     >
                       Salvar
@@ -280,12 +287,10 @@ function AdminDashboard() {
                   <div className="flex flex-col sm:flex-row gap-4 w-full justify-between">
                     <span className="text-lg font-medium">{entrega.descricao}</span>
                     <span className="text-sm text-gray-600">{entrega.status}</span>
-                    <span className="text-sm text-gray-600">
-                      {entrega.usuarioNome}
-                    </span>
+                    <span className="text-sm text-gray-600">{entrega.usuarioNome}</span>
                     <div className="flex gap-4">
                       <button
-                        onClick={() => setEditingEntrega(entrega.id)}
+                        onClick={() => editarEntregaModal(entrega)} // Passando a entrega para editar
                         className="text-blue-600 hover:text-blue-800 transition"
                       >
                         Editar
