@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import axios from "axios";
 
 function AdminDashboard() {
   const [entregas, setEntregas] = useState([]);
@@ -20,80 +21,109 @@ function AdminDashboard() {
   }, []);
 
   const fetchEntregas = async () => {
-    const response = await fetch("https://gerenciamento-de-entregas.onrender.com/entregas", {
-      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-    });
-    const data = await response.json();
-    setEntregas(data);
+    try {
+      const response = await axios.get("https://gerenciamento-de-entregas.onrender.com/entregas", {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      });
+      setEntregas(response.data);
+    } catch (error) {
+      console.error("Erro ao buscar entregas:", error);
+    }
   };
 
   const fetchUsuarios = async () => {
-    const response = await fetch("https://gerenciamento-de-entregas.onrender.com/api/users", {
-      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-    });
-    const data = await response.json();
-    setUsuarios(data);
+    try {
+      const response = await axios.get("https://gerenciamento-de-entregas.onrender.com/api/users", {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      });
+      setUsuarios(response.data);
+    } catch (error) {
+      console.error("Erro ao buscar usuários:", error);
+    }
   };
 
   const criarEntrega = async () => {
-    await fetch("https://gerenciamento-de-entregas.onrender.com/entregas", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-      body: JSON.stringify({ descricao, usuarioID }),
-    });
-    setDescricao("");
-    setUsuarioID("");
-    fetchEntregas();
+    try {
+      await axios.post(
+        "https://gerenciamento-de-entregas.onrender.com/entregas",
+        { descricao, usuarioID },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+      setDescricao("");
+      setUsuarioID("");
+      fetchEntregas();
+    } catch (error) {
+      console.error("Erro ao criar entrega:", error);
+    }
   };
 
   const editarEntrega = async (id, novaDescricao, novoStatus) => {
-    await fetch(`https://gerenciamento-de-entregas.onrender.com/entregas/${id}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-      body: JSON.stringify({ descricao: novaDescricao, status: novoStatus }),
-    });
-    setEditingEntrega(null);
-    fetchEntregas();
+    try {
+      await axios.put(
+        `https://gerenciamento-de-entregas.onrender.com/entregas/${id}`,
+        { descricao: novaDescricao, status: novoStatus },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+      setEditingEntrega(null);
+      fetchEntregas();
+    } catch (error) {
+      console.error("Erro ao editar entrega:", error);
+    }
   };
 
   const deletarEntrega = async (id) => {
-    await fetch(`https://gerenciamento-de-entregas.onrender.com/entregas/${id}`, {
-      method: "DELETE",
-      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-    });
-    fetchEntregas();
+    try {
+      await axios.delete(`https://gerenciamento-de-entregas.onrender.com/entregas/${id}`, {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      });
+      fetchEntregas();
+    } catch (error) {
+      console.error("Erro ao deletar entrega:", error);
+    }
   };
 
   const deletarUsuario = async (id) => {
-    await fetch(`https://gerenciamento-de-entregas.onrender.com/api/users/${id}`, {
-      method: "DELETE",
-      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-    });
-    fetchUsuarios();
+    try {
+      await axios.delete(`https://gerenciamento-de-entregas.onrender.com/api/users/${id}`, {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      });
+      fetchUsuarios();
+    } catch (error) {
+      console.error("Erro ao deletar usuário:", error);
+    }
   };
 
   const criarUsuarioAdmin = async () => {
-    const response = await fetch("https://gerenciamento-de-entregas.onrender.com/api/users/register-admin", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-      body: JSON.stringify(newAdminData),
-    });
-    const data = await response.json();
-    if (response.ok) {
-      alert("Administrador criado com sucesso!");
-      setNewAdminData({ nome: "", email: "", senha: "" });
-      fetchUsuarios();
-    } else {
-      alert(data);
+    try {
+      const response = await axios.post(
+        "https://gerenciamento-de-entregas.onrender.com/auth/register-admin",
+        newAdminData,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+      if (response.status === 200) {
+        alert("Administrador criado com sucesso!");
+        setNewAdminData({ nome: "", email: "", senha: "" });
+        fetchUsuarios();
+      } else {
+        alert("Erro ao criar administrador.");
+      }
+    } catch (error) {
+      console.error("Erro ao criar administrador:", error);
     }
   };
 
@@ -101,7 +131,6 @@ function AdminDashboard() {
     localStorage.removeItem("token");
     window.location.href = "/login";
   };
-
 
   return (
     <div className="p-8 max-w-4xl mx-auto bg-gray-400 min-h-screen flex flex-col items-center rounded-lg shadow-lg">
@@ -186,7 +215,7 @@ function AdminDashboard() {
       ) : (
         /* Dashboard de Entregas */
         <div className="w-full bg-white p-6 rounded-lg shadow-md">
-          <h1  >Registro de Entregas</h1>
+          <h1>Registro de Entregas</h1>
           <div className="flex flex-col sm:flex-row gap-4 w-full">
             <input
               type="text"
@@ -252,7 +281,6 @@ function AdminDashboard() {
                     <span className="text-lg font-medium">{entrega.descricao}</span>
                     <span className="text-sm text-gray-600">{entrega.status}</span>
                     <span className="text-sm text-gray-600">
-                      {/* Exibe o nome do usuário associado */}
                       {entrega.usuarioNome}
                     </span>
                     <div className="flex gap-4">
