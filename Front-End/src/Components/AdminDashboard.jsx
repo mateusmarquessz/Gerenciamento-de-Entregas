@@ -20,7 +20,7 @@ function AdminDashboard() {
   }, []);
 
   const fetchEntregas = async () => {
-    const response = await fetch("http://localhost:8080/entregas", {
+    const response = await fetch("https://gerenciamento-de-entregas.vercel.app/entregas", {
       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
     });
     const data = await response.json();
@@ -28,7 +28,7 @@ function AdminDashboard() {
   };
 
   const fetchUsuarios = async () => {
-    const response = await fetch("http://localhost:8080/api/users", {
+    const response = await fetch("https://gerenciamento-de-entregas.vercel.app/api/users", {
       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
     });
     const data = await response.json();
@@ -36,7 +36,7 @@ function AdminDashboard() {
   };
 
   const criarEntrega = async () => {
-    await fetch("http://localhost:8080/entregas", {
+    await fetch("https://gerenciamento-de-entregas.vercel.app/entregas", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -50,7 +50,7 @@ function AdminDashboard() {
   };
 
   const editarEntrega = async (id, novaDescricao, novoStatus) => {
-    await fetch(`http://localhost:8080/entregas/${id}`, {
+    await fetch(`https://gerenciamento-de-entregas.vercel.app/entregas/${id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -63,7 +63,7 @@ function AdminDashboard() {
   };
 
   const deletarEntrega = async (id) => {
-    await fetch(`http://localhost:8080/entregas/${id}`, {
+    await fetch(`https://gerenciamento-de-entregas.vercel.app/entregas/${id}`, {
       method: "DELETE",
       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
     });
@@ -71,7 +71,7 @@ function AdminDashboard() {
   };
 
   const deletarUsuario = async (id) => {
-    await fetch(`http://localhost:8080/api/users/${id}`, {
+    await fetch(`https://gerenciamento-de-entregas.vercel.app/api/users/${id}`, {
       method: "DELETE",
       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
     });
@@ -79,7 +79,7 @@ function AdminDashboard() {
   };
 
   const criarUsuarioAdmin = async () => {
-    const response = await fetch("http://localhost:8080/api/users/register-admin", {
+    const response = await fetch("https://gerenciamento-de-entregas.vercel.app/api/users/register-admin", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

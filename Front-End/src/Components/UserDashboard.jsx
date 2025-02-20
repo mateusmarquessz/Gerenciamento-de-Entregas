@@ -15,7 +15,7 @@ function UserDashboard() {
   useEffect(() => {
     const fetchEntregas = async () => {
       try {
-        const response = await axios.get(`http://localhost:8080/entregas/usuario/${userId}`, {
+        const response = await axios.get(`https://gerenciamento-de-entregas.vercel.app/entregas/usuario/${userId}`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
@@ -50,7 +50,7 @@ function UserDashboard() {
       };
 
       const response = await axios.put(
-        `http://localhost:8080/entregas/${entregaId}/atualizar-status`,
+        `https://gerenciamento-de-entregas.vercel.app/entregas/${entregaId}/atualizar-status`,
         entregaDTO,
         {
           headers: {

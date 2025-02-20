@@ -12,7 +12,7 @@ function Login() {
     e.preventDefault();
 
     try {
-      const response = await axios.post("http://localhost:8080/auth/login", {
+      const response = await axios.post("https://gerenciamento-de-entregas.vercel.app/auth/login", {
         email,
         senha,
       });
