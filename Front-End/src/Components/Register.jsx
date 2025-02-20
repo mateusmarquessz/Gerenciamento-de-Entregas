@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 
 function Register() {
@@ -7,6 +7,7 @@ function Register() {
   const [senha, setSenha] = useState("");
   const [nome, setNome] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const navigate = useNavigate();
 
   const handleRegister = async (e) => {
     e.preventDefault();
@@ -18,6 +19,7 @@ function Register() {
         senha,
       });
       console.log("Cadastro bem-sucedido", response.data);
+      navigate("/login"); // Redireciona para a página de login
     } catch (error) {
       setErrorMessage("Falha no cadastro. Tente novamente.");
       console.error("Erro de cadastro", error);
@@ -30,12 +32,12 @@ function Register() {
         <h2 className="text-2xl font-bold mb-6">Registro</h2>
         {errorMessage && <div className="text-red-500 mb-4">{errorMessage}</div>}
         <form onSubmit={handleRegister}>
-        <div className="mb-4">
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+          <div className="mb-4">
+            <label htmlFor="nome" className="block text-sm font-medium text-gray-700">
               Nome
             </label>
             <input
-              type="nome"
+              type="text"
               id="nome"
               value={nome}
               onChange={(e) => setNome(e.target.value)}
@@ -77,10 +79,7 @@ function Register() {
           </button>
         </form>
         <div className="mt-4 text-center">
-          <Link
-            to="/login"
-            className="text-blue-500 hover:text-blue-600"
-          >
+          <Link to="/login" className="text-blue-500 hover:text-blue-600">
             Já tem uma conta? Faça login
           </Link>
         </div>
