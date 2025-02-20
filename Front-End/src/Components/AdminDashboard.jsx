@@ -186,7 +186,7 @@ function AdminDashboard() {
       ) : (
         /* Dashboard de Entregas */
         <div className="w-full bg-white p-6 rounded-lg shadow-md">
-          <h1 className="block mb-2">Registro de Entregas</h1>
+          <h1  >Registro de Entregas</h1>
           <div className="flex flex-col sm:flex-row gap-4 w-full">
             <input
               type="text"
