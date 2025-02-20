@@ -1,27 +1,25 @@
-# Etapa de Build
-FROM maven:3.8.8-openjdk-17 AS build
+FROM ubuntu:latest AS build
 
-WORKDIR /app
-COPY pom.xml ./
+RUN apt-get update
+RUN apt-get install openjdk-17-jdk -y
+COPY . .
+
+
+RUN apt-get install maven -y
+RUN mvn clean install
+
+FROM openjdk:17-jdk-slim AS build
+COPY pom.xml mvnw ./
 COPY .mvn .mvn
-COPY mvnw ./
 
-# Concede permissão de execução ao Maven Wrapper
-RUN chmod +x mvnw
+RUN chmod +x ./mvnw
 
-# Baixa as dependências antes de copiar o código-fonte para otimizar o cache
-RUN ./mvnw dependency:go-offline
+RUN ./mvnw dependency:resolve
 
-# Copia o restante do código-fonte
-COPY src ./src
+COPY src src
 
-# Compila o projeto
-RUN ./mvnw package -DskipTests
-
-# Etapa de Produção
+RUN ./mvnw package -X
 FROM openjdk:17-jdk-slim
-
-WORKDIR /app
-COPY --from=build /app/target/*.jar app.jar
-
-ENTRYPOINT ["java", "-jar", "app.jar"]
+WORKDIR demo
+COPY --from=build target/*.jar demo.jar
+ENTRYPOINT ["java", "-jar", "demo.jar"]
