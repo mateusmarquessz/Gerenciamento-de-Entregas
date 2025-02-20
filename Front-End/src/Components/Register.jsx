@@ -12,7 +12,7 @@ function Register() {
     e.preventDefault();
 
     try {
-      const response = await axios.post("https://gerenciamento-de-entregas.vercel.app/auth/register", {
+      const response = await axios.post("http://localhost:8080/auth/register", {
         nome,
         email,
         senha,
