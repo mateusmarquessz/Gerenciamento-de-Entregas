@@ -43,6 +43,7 @@ public class AuthController {
                     .body("Erro ao realizar o login: " + e.getMessage());
         }
     }
+
     //Create do Crud Usuario
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody RegisterRequestDTO body) {
